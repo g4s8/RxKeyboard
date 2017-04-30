@@ -1,4 +1,12 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.g4s8.quanta'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+group = 'com.g4s8'
+def versionMajor = System.env.TRAVIS_TAG ?: "0.1"
+def versionMinor = System.env.TRAVIS_BUILD_NUMBER ?: "-local"
+version = "${versionMajor}.${versionMinor}"
 
 android {
     compileSdkVersion 25
@@ -7,8 +15,9 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+
+        versionCode System.env.TRAVIS_BUILD_NUMBER?.toInteger() ?: 1
+        versionName version
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -19,10 +28,94 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
 
+configurations {
+    javadocDeps
+}
+
+def DEP_RX_VERSION = '2.0.7'
+def DEP_SUPPORT_VERSION = '25.3.1'
+
 dependencies {
-    compile 'io.reactivex.rxjava2:rxjava:2.0.7'
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:support-annotations:25.3.1'
+    compile "io.reactivex.rxjava2:rxjava:$DEP_RX_VERSION"
+    compile "com.android.support:support-annotations:$DEP_SUPPORT_VERSION"
+    javadocDeps "com.android.support:support-annotations:$DEP_SUPPORT_VERSION"
+    javadocDeps "io.reactivex.rxjava2:rxjava:$DEP_RX_VERSION"
+    testCompile "junit:junit:4.12"
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.javadocDeps
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+def siteUrl = 'https://github.com/g4s8/RxKeyboard'
+def gitUrl = 'https://github.com/g4s8/RxKeyboard.git'
+
+bintray {
+    user = System.env.BINTRAY_USER
+    key = System.env.BINTRAY_API_KEY
+
+    configurations = ['archives']
+    pkg {
+        repo = 'maven-android'
+        name = 'com.g4s8.rxkeyboard'
+        licenses = ['MIT']
+        vcsUrl = gitUrl
+        websiteUrl = siteUrl
+        issueTrackerUrl = "${siteUrl}/issues"
+        labels = ['aar', 'android']
+        publicDownloadNumbers = true
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name 'RxJava2 binding for Android soft keyboard'
+                url siteUrl
+                licenses {
+                    license {
+                        name 'The MIT License (MIT)'
+                        url 'https://github.com/g4s8/RxKeyboard/blob/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'g4s8'
+                        name 'Kirill'
+                        email 'g4s8.public@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
 }

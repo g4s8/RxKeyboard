@@ -1,4 +1,4 @@
-package com.g4s8.lib;
+package com.g4s8.rxkeyboard;
 
 import android.os.IBinder;
 import android.support.annotation.Keep;
@@ -18,6 +18,10 @@ import io.reactivex.Completable;
 @Keep
 public interface RxSoftKeyboard {
 
+    /**
+     * Show keyboard flags.
+     * @see InputMethodManager
+     */
     enum ShowFlags {
         NONE(0),
         IMPLICIT(InputMethodManager.SHOW_IMPLICIT);
@@ -34,7 +38,10 @@ public interface RxSoftKeyboard {
         }
     }
 
-
+    /**
+     * Hide keyboard flags.
+     * @see InputMethodManager
+     */
     enum HideFlags {
         NONE(0),
         IMPLICIT_ONLY(InputMethodManager.HIDE_IMPLICIT_ONLY);

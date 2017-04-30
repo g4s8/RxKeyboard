@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.g4s8.lib.RxAndroidSoftKeyboard;
-import com.g4s8.lib.RxSoftKeyboard;
+import com.g4s8.rxkeyboard.RxAndroidSoftKeyboard;
+import com.g4s8.rxkeyboard.RxSoftKeyboard;
 import io.reactivex.functions.Action;
 
 public class MainActivity extends AppCompatActivity {

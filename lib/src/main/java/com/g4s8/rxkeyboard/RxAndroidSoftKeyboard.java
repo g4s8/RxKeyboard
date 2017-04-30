@@ -1,4 +1,4 @@
-package com.g4s8.lib;
+package com.g4s8.rxkeyboard;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -27,6 +27,11 @@ public final class RxAndroidSoftKeyboard implements RxSoftKeyboard {
 
     private final InputMethodManager imm;
 
+    /**
+     * Ctor.
+     *
+     * @param ctx Android context
+     */
     public RxAndroidSoftKeyboard(@NonNull final Context ctx) {
         this(
             InputMethodManager.class.cast(
@@ -37,6 +42,11 @@ public final class RxAndroidSoftKeyboard implements RxSoftKeyboard {
         );
     }
 
+    /**
+     * Ctor.
+     *
+     * @param imm input method manager
+     */
     public RxAndroidSoftKeyboard(@NonNull final InputMethodManager imm) {
         this.imm = imm;
     }
