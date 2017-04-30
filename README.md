@@ -12,6 +12,7 @@ dependencies {
   "io.reactivex.rxjava2:rxjava:2.0.7"
 }
 ```
+See [latest release](https://github.com/g4s8/RxKeyboard/releases/latest) for build dependency
 
 ## Usage
 ### show android keyboard async
