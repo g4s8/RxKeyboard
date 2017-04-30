@@ -10,7 +10,7 @@ jdk:
   - 'oraclejdk8'
 
 script:
-  - './gradlew :lib:clean :lib:build'
+  - './gradlew clean build'
 
 before_cache:
   - 'rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock'
@@ -25,9 +25,9 @@ cache:
 #  - './gradlew :lib:jacocoReport'
 #  - 'bash <(curl -s https://codecov.io/bash)'
 
-#deploy:
-#  provider: 'script'
-#  script: './gradlew :lib:bintrayUpload'
-#  skip_cleanup: true
-#  on:
-#    branch: 'master'
+deploy:
+  provider: 'script'
+  script: './gradlew bintrayUpload'
+  skip_cleanup: true
+  on:
+    tags: true
