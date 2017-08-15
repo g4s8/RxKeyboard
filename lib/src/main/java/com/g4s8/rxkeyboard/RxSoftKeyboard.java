@@ -1,6 +1,5 @@
 package com.g4s8.rxkeyboard;
 
-import android.os.IBinder;
 import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.support.annotation.RestrictTo;
@@ -20,6 +19,7 @@ public interface RxSoftKeyboard {
 
     /**
      * Show keyboard flags.
+     *
      * @see InputMethodManager
      */
     enum ShowFlags {
@@ -40,6 +40,7 @@ public interface RxSoftKeyboard {
 
     /**
      * Hide keyboard flags.
+     *
      * @see InputMethodManager
      */
     enum HideFlags {
@@ -71,10 +72,10 @@ public interface RxSoftKeyboard {
     /**
      * Hide keyboard async for window token with flags.
      *
-     * @param windowToken window token binder
-     * @param flags       keyboard flags
+     * @param view  target view
+     * @param flags keyboard flags
      * @return completable action
      */
     @NonNull
-    Completable hide(@NonNull final IBinder windowToken, @NonNull final HideFlags flags);
+    Completable hide(@NonNull final View view, @NonNull final HideFlags flags);
 }
