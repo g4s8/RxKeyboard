@@ -3,6 +3,7 @@ docker:
 
 merge:
   script: |
+    env
     ./gradlew clean build
 release:
   script: |
