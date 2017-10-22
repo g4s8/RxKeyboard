@@ -1,5 +1,5 @@
 docker:
-  image: g4s8/rlt2droid
+  image: g4s8/rultor4droid
 
 merge:
   script: |
