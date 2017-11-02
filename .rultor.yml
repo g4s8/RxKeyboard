@@ -3,8 +3,7 @@ docker:
 
 merge:
   script: |
-    env
-    ./gradlew clean build
+    env ANDROID_HOME=/opt/android ./gradlew clean build
 release:
   script: |
     echo $tag
