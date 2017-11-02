@@ -1,18 +1,11 @@
 package com.g4s8.rxkeyboard;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Looper;
-import android.os.ResultReceiver;
 import android.support.annotation.Keep;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import io.reactivex.Completable;
-import io.reactivex.CompletableEmitter;
-import io.reactivex.CompletableOnSubscribe;
 
 /**
  * Reactive android software keyboard implemented via
@@ -25,7 +18,7 @@ import io.reactivex.CompletableOnSubscribe;
 @Keep
 public final class RxAndroidSoftKeyboard implements RxSoftKeyboard {
 
-    private final InputMethodManager imm;
+    private final Context ctx;
 
     /**
      * Ctor.
@@ -33,76 +26,26 @@ public final class RxAndroidSoftKeyboard implements RxSoftKeyboard {
      * @param ctx Android context
      */
     public RxAndroidSoftKeyboard(@NonNull final Context ctx) {
-        this(
-            InputMethodManager.class.cast(
-                ctx.getSystemService(
-                    Context.INPUT_METHOD_SERVICE
-                )
-            )
-        );
+        this.ctx = ctx;
     }
 
-    /**
-     * Ctor.
-     *
-     * @param imm input method manager
-     */
-    public RxAndroidSoftKeyboard(@NonNull final InputMethodManager imm) {
-        this.imm = imm;
+    private InputMethodManager imm() {
+        return InputMethodManager.class.cast(
+            ctx.getSystemService(
+                Context.INPUT_METHOD_SERVICE
+            )
+        );
     }
 
     @NonNull
     @Override
     public Completable show(@NonNull final View view, @NonNull final ShowFlags flags) {
-        return Completable.create(
-            new CompletableOnSubscribe() {
-                @Override
-                public void subscribe(final CompletableEmitter emitter) throws Exception {
-                    final boolean shown = RxAndroidSoftKeyboard.this.imm.showSoftInput(
-                        view,
-                        flags.value(),
-                        new EmitterReceiver(emitter)
-                    );
-                    if (!shown) {
-                        emitter.onComplete();
-                    }
-                }
-            }
-        );
+        return new ShowTask(imm(), view, flags);
     }
 
     @NonNull
     @Override
-    public Completable hide(@NonNull final IBinder token, @NonNull final HideFlags flags) {
-        return Completable.create(
-            new CompletableOnSubscribe() {
-                @Override
-                public void subscribe(final CompletableEmitter emitter) throws Exception {
-                    final boolean hidden = RxAndroidSoftKeyboard.this.imm.hideSoftInputFromWindow(
-                        token,
-                        flags.value(),
-                        new EmitterReceiver(emitter)
-                    );
-                    if (!hidden) {
-                        emitter.onComplete();
-                    }
-                }
-            }
-        );
-    }
-
-    private static final class EmitterReceiver extends ResultReceiver {
-
-        private final CompletableEmitter emitter;
-
-        private EmitterReceiver(@NonNull final CompletableEmitter emitter) {
-            super(new Handler(Looper.getMainLooper()));
-            this.emitter = emitter;
-        }
-
-        @Override
-        protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-            this.emitter.onComplete();
-        }
+    public Completable hide(@NonNull final View view, @NonNull final HideFlags flags) {
+        return new HideTask(imm(), view, flags);
     }
 }
