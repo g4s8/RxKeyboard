@@ -1,8 +1,9 @@
 docker:
-  image: g4s8/rlt2droid
+  image: g4s8/ubuntu-base
 
 merge:
   script: |
+    env
     ./gradlew clean build
 release:
   script: |
