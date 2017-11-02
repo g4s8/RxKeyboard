@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.g4s8.quanta'
+//apply plugin: 'com.g4s8.quanta'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
@@ -10,7 +10,7 @@ version = "${versionMajor}.${versionMinor}"
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 19
