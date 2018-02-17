@@ -1,5 +1,5 @@
 docker:
-  image: g4s8/ubuntu-base
+  image: g4s8/rultor-android
 
 merge:
   script: |
